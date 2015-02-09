@@ -5,10 +5,10 @@
 ***************************************************/
 
 public class Percolation {
+    private final int size;
     private boolean[][] site;
     private WeightedQuickUnionUF fullUF;
     private WeightedQuickUnionUF backwashUF;
-    private int size;
 
     /*
         create N-by-N grid, with all sites blocked
