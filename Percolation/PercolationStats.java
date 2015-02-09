@@ -1,29 +1,28 @@
-/*
+/****************************************************
 *
 *  Dependencies: Percolation, StdStats, StdRandom
-*/
+*
+*****************************************************/
 
 public class PercolationStats {
     private double[] fractions;
     private int times;
-    private int size;
     
     /*
         perform T independent experiments on an N-by-N grid
     */
     public PercolationStats(int N, int T) {
         if (N <= 0 || T <= 0)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("N and T must be positive");
         
-        size = N;
         times = T;
         fractions = new double[times];
         for (int k = 0; k < times; k++) {
-            Percolation pr = new Percolation(size);
+            Percolation pr = new Percolation(N);
             int calls = 0;
             while (!pr.percolates()) {
-                int i = StdRandom.uniform(1, size + 1);
-                int j = StdRandom.uniform(1, size + 1);
+                int i = StdRandom.uniform(1, N + 1);
+                int j = StdRandom.uniform(1, N + 1);
                 if (!pr.isOpen(i, j)) {
                     pr.open(i, j);
                     calls++;
@@ -72,8 +71,8 @@ public class PercolationStats {
         
         String confidence = ps.confidenceLo() + ", " + ps.confidenceHi();
         
-        StdOut.printf("mean                    = %s\n", ps.mean() + "");
-        StdOut.printf("stddev                  = %s\n", ps.stddev() + "");
-        StdOut.printf("95%% confidence interval = %s\n", confidence);
+        StdOut.println("mean                     = " + ps.mean());
+        StdOut.println("stddev                   = " + ps.stddev());
+        StdOut.println("95% confidence interval  = " + confidence);
     }
 }

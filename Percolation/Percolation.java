@@ -1,5 +1,7 @@
 /***************************************************
+*
 * Dependencies: WeightedQuickUnionUF
+*
 ***************************************************/
 
 public class Percolation {
@@ -27,8 +29,19 @@ public class Percolation {
             throw new IndexOutOfBoundsException();
     }
     
+    /*
+        get uf index from i, j
+    */
     private int getUFIndex(int i, int j) {
         return size * (i - 1) + j;
+    }
+    
+    /*
+        union backwash uf and full uf
+    */
+    private void unionUF(int p, int k) {
+        backwashUF.union(p, k);
+        fullUF.union(p, k);
     }
     
     /*
@@ -41,33 +54,27 @@ public class Percolation {
         
         // top site
         if (i > 1 && isOpen(i - 1, j)) {
-            backwashUF.union(getUFIndex(i, j), getUFIndex(i - 1, j));
-            fullUF.union(getUFIndex(i, j), getUFIndex(i - 1, j));
+            unionUF(getUFIndex(i, j), getUFIndex(i - 1, j));
         }
         
         // bottom site
         if (i < size && isOpen(i + 1, j)) {
-            backwashUF.union(getUFIndex(i, j), getUFIndex(i + 1, j));
-            fullUF.union(getUFIndex(i, j), getUFIndex(i + 1, j));
+            unionUF(getUFIndex(i, j), getUFIndex(i + 1, j));
         }
         
         // left site
         if (j > 1 && isOpen(i, j - 1)) {
-            backwashUF.union(getUFIndex(i, j), getUFIndex(i, j - 1));
-            fullUF.union(getUFIndex(i, j), getUFIndex(i, j - 1));
+            unionUF(getUFIndex(i, j), getUFIndex(i, j - 1));
         }
         
         // right site
         if (j < size && isOpen(i, j + 1)) {
-            backwashUF.union(getUFIndex(i, j), getUFIndex(i, j + 1));
-            fullUF.union(getUFIndex(i, j), getUFIndex(i, j + 1));
+            unionUF(getUFIndex(i, j), getUFIndex(i, j + 1));
         }
-        
         
         // union with top virtual site
         if (i == 1) {
-            backwashUF.union(0, getUFIndex(i, j));
-            fullUF.union(0, getUFIndex(i, j));
+            unionUF(0, getUFIndex(i, j));
         }
         
         // union with bottom virtual site
