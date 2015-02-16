@@ -154,26 +154,36 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String[] args) {
         Deque<Integer> deque = new Deque<Integer>();
         
-        for (int i = 0; i < 17; i++) {
-            deque.addLast(i);
-            deque.addFirst(i);
-        }
+        //for (int i = 0; i < 1700; i++) {
+            deque.addLast(1);
+            deque.addFirst(2);
+        //}
         
         for (int i = 100; i < 120; i++) {
-            deque.addLast(i);
+            //deque.addLast(i);
         }
         
         for (int i : deque) 
             StdOut.println("deque iterator - " + i);
+            
+        deque.removeLast();
         
-        for (int i = 0; i < 17; i++) {
+        for (int i : deque) 
+            StdOut.println("deque iterator - " + i);
+            
+        deque.removeFirst();
+        
+        for (int i : deque) 
+            StdOut.println("deque iterator - " + i);
+                
+      /*  for (int i = 0; i < 17; i++) {
             StdOut.println(deque.removeLast());
         }
         
         
         for (int i = 0; i < 6; i++) {
             StdOut.println(deque.removeFirst());
-        }
+        } */
         
     }
 }
