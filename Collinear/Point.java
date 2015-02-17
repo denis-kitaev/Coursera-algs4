@@ -16,7 +16,7 @@ import java.util.Comparator;
 public class Point implements Comparable<Point> {
 
     // compare points by slope
-    public final Comparator<Point> SLOPE_ORDER;       // YOUR DEFINITION HERE
+    public final Comparator<Point> SLOPE_ORDER = new SlopeOrder();
 
     private final int x;                              // x coordinate
     private final int y;                              // y coordinate
@@ -26,6 +26,18 @@ public class Point implements Comparable<Point> {
         /* DO NOT MODIFY */
         this.x = x;
         this.y = y;
+    }
+    
+    private class SlopeOrder implements Comparator<Point> {
+        public int compare(Point v, Point w) {
+            if (slopeTo(v) > slopeTo(w)) {
+                return 1;
+            } else if (slopeTo(v) < slopeTo(w)) {
+                return -1;
+            } else {
+                return 0;
+            }    
+        }
     }
 
     // plot this point to standard drawing
@@ -42,7 +54,17 @@ public class Point implements Comparable<Point> {
 
     // slope between this point and that point
     public double slopeTo(Point that) {
-        return (that.y - this.y) / (that.x - this.x);
+        if (this.y == that.y && this.x == that.x) {
+            return Double.NEGATIVE_INFINITY;
+        }
+        if (that.x == this.x) {
+            return Double.POSITIVE_INFINITY;
+        }
+        if (that.y == this.y) {
+            return 0.0;
+        }
+        
+        return ((double) that.y - this.y) / ((double) that.x - this.x);
     }
 
     // is this point lexicographically smaller than that one?
