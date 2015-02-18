@@ -21,24 +21,21 @@ public class Brute {
         
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < count; j++) {
-                if (i != j) {
+                if (i != j && points[i].compareTo(points[j]) <= 0) {
                     for (int k = 0; k < count; k++) {
-                        if (i != k && j != k) {
+                        if (i != k && j != k && points[j].compareTo(points[k]) <= 0
+                            && points[i].slopeTo(points[j]) == points[j].slopeTo(points[k])) {
                             for (int l = 0; l < count; l++) {
-                                if (i != l && j != l && k != l) {
-                                    if (points[i].compareTo(points[j]) <= 0 &&
-                                        points[j].compareTo(points[k]) <= 0 &&
-                                        points[k].compareTo(points[l]) <= 0) {
-                                        if (points[i].slopeTo(points[j]) == points[j].slopeTo(points[k]) &&
-                                            points[j].slopeTo(points[k]) == points[k].slopeTo(points[l]) ) {
-                                            
-                                            StdOut.println(points[i] + " -> "
-                                                         + points[j] + " -> "
-                                                         + points[k] + " -> " + points[l]);
-                                                         
-                                            points[i].drawTo(points[l]);             
-                                        }
-                                    }
+                                if (i != l && j != l && k != l && points[k].compareTo(points[l]) <= 0
+                                    && points[j].slopeTo(points[k]) == points[k].slopeTo(points[l])) {
+
+                                    StdOut.println(points[i] + " -> "
+                                                 + points[j] + " -> "
+                                                 + points[k] + " -> " + points[l]);
+                                                 
+                                    points[i].drawTo(points[l]);             
+                                    
+                                    
                                 }
                             }
                         }

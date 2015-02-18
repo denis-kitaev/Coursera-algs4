@@ -4,48 +4,41 @@ import java.util.Arrays;
 public class Fast {
     public static void main(String[] args) {
         In in = new In(args[0]);
-        int[] pointlist = in.readAllInts();
-        int count = pointlist[0];
+        int count = in.readInt();
         
         StdDraw.setXscale(0, 32768);
         StdDraw.setYscale(0, 32768);
         StdDraw.setPenRadius(0.01);
         
         Point[] points = new Point[count];
+        Point[] originPoints = new Point[count];
+        
         Point[][] endPoints = new Point[count][2];
         int collinearCounter = 0;
-        int counter = 0;
-        for (int i = 1; i < pointlist.length - 1; i = i + 2) {
-            Point point = new Point(pointlist[i], pointlist[i + 1]);
-            points[counter] = point;
-            point.draw();
-            counter++;
+
+        for (int i = 0; i < count; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+            originPoints[i] = new Point(x, y);
+            points[i].draw();
         }
         
-        //count = points.length;
+        if (count < 3) return;
+        
         StdDraw.setPenRadius(0.005);
-        
-        //Point tmp = new Point(6512, 2986);
-        
+
         for (int i = 0; i < count; i++) {
-            Point p = points[i];
-            Arrays.sort(points, p.SLOPE_ORDER);
-                
-            for (int j = 1; j < count - 2; j++) {
+            Arrays.sort(points, originPoints[i].SLOPE_ORDER);
+            Point p = points[0];
+            int j;
+            for (j = 0; j < count - 2; j++) {
                 Point q = points[j];
                 Point r = points[j + 2];
-                int k = 0;
+                int k;
                 
-                
-                for (int l = 0; l < count; l++) {
-                    StdOut.println("l = " + l + "; " + points[l] + "; slope = " + p.slopeTo(points[l]));
-                }
-                StdOut.println("=======================");
-
                 if (p.slopeTo(q) == p.slopeTo(r)) {
                     double slope = p.slopeTo(q);
-                    
-                    //k = j + 3;
                     
                     Point t;
                     for (k = j + 3; k < count; k++) {
@@ -54,25 +47,8 @@ public class Fast {
                             break;
                         }
                     }
-                    /*
-                    if (k < count) {
-                    
-                        Point q = points[k];
-                        while (p.slopeTo(q) == slope) {
-                            q = points[k];
-                            k++;
-                            if (k == count) {
-                                break;
-                            }
-                        }
-                    }
-                    */
-                    Point[] collPoints = new Point[k - j + 1];
-                    
-                    StdOut.println("j = " + j);
-                    StdOut.println("k = " + k);
         
-                    
+                    Point[] collPoints = new Point[k - j + 1];
                     collPoints[0] = p;
                     int pointCounter = 1;
                     for (int l = j; l < k; l++) {
@@ -83,10 +59,10 @@ public class Fast {
                     Arrays.sort(collPoints);
                     
                     boolean flag = false;
-                    
+
                     for (int z = 0; z < collinearCounter; z++) {
-                        if (collPoints[0] == endPoints[z][0] && 
-                            collPoints[collPoints.length - 1] == endPoints[z][1]) {
+                        if (collPoints[0] == endPoints[z][0] 
+                            && collPoints[collPoints.length - 1] == endPoints[z][1]) {
                             
                             flag = true;
                             break;
@@ -107,7 +83,7 @@ public class Fast {
                         collPoints[0].drawTo(collPoints[collPoints.length - 1]);
                     }
                     
-                    j = --k;
+                    j = k;
                 }
             }
         }
