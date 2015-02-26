@@ -13,7 +13,7 @@ public class Fast {
         Point[] points = new Point[count];
         Point[] originPoints = new Point[count];
         
-        Point[][] endPoints = new Point[count][2];
+        Point[][] endPoints = new Point[count * 2][2];
         int collinearCounter = 0;
 
         for (int i = 0; i < count; i++) {
