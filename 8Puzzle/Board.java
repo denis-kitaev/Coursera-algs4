@@ -3,9 +3,7 @@ import java.util.NoSuchElementException;
 import java.util.Comparator;
 
 
-public class Board {
-    public static final Comparator<Board> MANHATTAN_ORDER = new ManhattanOrder();
-    
+public class Board {    
     private final int len;
     private int[][] blocks;
     
@@ -24,19 +22,8 @@ public class Board {
                 this.blocks[i][j] = blocks[i][j];
             }
         }
-    }      
-    
-    private static class ManhattanOrder implements Comparator<Board> {
-        public int compare(Board v, Board w) {
-            if (v.manhattan() + v.hamming() > w.manhattan() + w.hamming()) {
-                return 1;
-            } else if (v.manhattan() + v.hamming() < w.manhattan() + w.hamming()) {
-                return -1;
-            } else {
-                return 0;
-            }    
-        }
-    }     
+    }
+      
     
     // board dimension N                                       
     public int dimension() {
@@ -90,8 +77,16 @@ public class Board {
     
     // is this board the goal board?                 
     public boolean isGoal() {
+        if (blocks[len - 1][len - 1] != 0) {
+            return false;
+        }
+        
         for (int i = 0; i < len; i++) {
-            for (int j = 0; j < len - 1; j++) {
+            for (int j = 0; j < len; j++) {
+                if (i == j && i == len - 1) {
+                    continue;
+                }
+                
                 if (blocks[i][j] != i * len + j + 1) {
                     return false;
                 }
@@ -116,10 +111,10 @@ public class Board {
             }
         }
         
-        if (blankColl != 0) {
-            exch(twinBlocks, blankRow, blankColl, blankRow, blankColl - 1);
+        if (blankRow != 0) {
+            exch(twinBlocks, 0, 0, 0, 1);
         } else {
-            exch(twinBlocks, blankRow, blankColl, blankRow, blankColl + 1);
+            exch(twinBlocks, 1, 0, 1, 1);
         }
                
         Board twin = new Board(twinBlocks);

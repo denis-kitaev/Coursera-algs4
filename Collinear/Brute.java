@@ -21,20 +21,22 @@ public class Brute {
         
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < count; j++) {
-                if (i != j && points[i].compareTo(points[j]) <= 0) {
+                int cmpIJ = points[i].compareTo(points[j]);
+                if (i != j && cmpIJ <= 0) {
                     for (int k = 0; k < count; k++) {
-                        if (i != k && j != k && points[j].compareTo(points[k]) <= 0
-                            && points[i].slopeTo(points[j]) == points[j].slopeTo(points[k])) {
+                        int cmpJK = points[j].compareTo(points[k]);
+                        double slopeIJ = points[i].slopeTo(points[j]);
+                        double slopeJK = points[j].slopeTo(points[k]);
+                        if (i != k && j != k && cmpJK <= 0 && slopeIJ == slopeJK) {
                             for (int l = 0; l < count; l++) {
-                                if (i != l && j != l && k != l && points[k].compareTo(points[l]) <= 0
-                                    && points[j].slopeTo(points[k]) == points[k].slopeTo(points[l])) {
-
-                                    StdOut.println(points[i] + " -> "
-                                                 + points[j] + " -> "
-                                                 + points[k] + " -> " + points[l]);
-                                                 
-                                    points[i].drawTo(points[l]);             
+                                int cmpKL = points[k].compareTo(points[l]);
+                                double slopeKL = points[k].slopeTo(points[l]);
+                                if (i != l && j != l && k != l && cmpKL <= 0 && slopeJK == slopeKL) {
+                                    String out = points[i] + " -> " + points[j] + " -> ";
+                                    out += points[k] + " -> " + points[l];
                                     
+                                    StdOut.println(out);             
+                                    points[i].drawTo(points[l]);
                                     
                                 }
                             }

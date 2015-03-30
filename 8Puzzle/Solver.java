@@ -5,11 +5,16 @@
 **********************************************************/
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Comparator;
 
 
 public class Solver {
     private Board initial;
     private int moves = 0;
+    
+    private final Comparator<SearchNode> MANHATTAN_ORDER = new ManhattanOrder();
+    private final Comparator<SearchNode> HAMMING_ORDER = new HammingOrder();
+    private final Comparator<SearchNode> PRIORITY_ORDER = new PriorityOrder();
     
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
@@ -22,23 +27,63 @@ public class Solver {
             // sad but true
         }
         
-        MinPQ<Board> pq = new MinPQ(Board.MANHATTAN_ORDER);
+        MinPQ<SearchNode> pq = new MinPQ(this.PRIORITY_ORDER);
+        MinPQ<SearchNode> pqTwin = new MinPQ(this.PRIORITY_ORDER);
         
-        Board b = initial;
-        pq.insert(initial);
-        while (b.manhattan() != 0) {
-            b = pq.delMin();
-            pq.insert(b);
-            if (b.manhattan() == 0) {
-                break;
-            }
-            
+        SearchNode sn = new SearchNode(initial, 0, null);
+        SearchNode snTwin = new SearchNode(initial.twin(), 0, null);
+        
+        pq.insert(sn);
+        pqTwin.insert(snTwin);
+        
+        Board b = pq.delMin().board;
+        while (!b.isGoal()) {
             Iterator<Board> ns = b.neighbors();
             
             while (ns.hasNext()) {
-                pq.insert(ns.next());
+                sn = new SearchNode(ns.next(), moves, sn);
+                pq.insert(sn);
             }
-            this.moves++;
+            
+            b = pq.delMin().board;
+            StdOut.println(b);
+            moves++;
+        }
+    }
+    
+    private class SearchNode {
+        private Board board;
+        private int moves;
+        private SearchNode prev;
+        
+        public SearchNode(Board b, int m, SearchNode p) {
+            board = b;
+            moves = m;
+            prev = p;  
+        }
+    }
+    
+    private class ManhattanOrder implements Comparator<SearchNode> {
+        public int compare(SearchNode v, SearchNode w) {
+            return v.board.manhattan() - w.board.manhattan();
+        }
+    }
+    
+    private class HammingOrder implements Comparator<SearchNode> {
+        public int compare(SearchNode v, SearchNode w) {
+            return v.board.hamming() - w.board.hamming();
+        }
+    }
+    
+    private class PriorityOrder implements Comparator<SearchNode> {
+        public int compare(SearchNode v, SearchNode w) {
+            int pv = v.board.manhattan() + v.moves;
+            int pw = w.board.manhattan() + w.moves;
+            
+            if (pv == pw) {
+                return v.board.manhattan() - w.board.manhattan();
+            }
+            return pv - pw;
         }
     }
     
@@ -56,7 +101,7 @@ public class Solver {
     }      
     
     // sequence of boards in a shortest solution; null if unsolvable         
- /*   public Iterable<Board> solution() {
+    public Iterator<Board> solution() {
         return new SolutionIterator();
     }
     
@@ -79,7 +124,7 @@ public class Solver {
             }
             return initial;
         }    
-    } */
+    } 
     
     // solve a slider puzzle (given below)   
     public static void main(String[] args) {
